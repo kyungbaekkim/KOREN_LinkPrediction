@@ -66,7 +66,7 @@ KOREN망은 10개의 도시와 22개의 Link로 구성되며 다음과 같다.
 
 
 ### 6.시각화
-예측 결과를 ElasticSearch에 저장한다. ElasticSearch에서 예측결과를 불러와 Kibana(웹페이지)에 시각화단다.
+예측 결과를 ElasticSearch에 저장한다. ElasticSearch에서 예측결과를 불러와 Kibana(웹페이지)에 시각화한다.
 
 다음 그림은 대전-광주 Link의 Link 예측결과를 Kibana에 시각화한 결과다.
 ![캡처](https://user-images.githubusercontent.com/28920880/105176199-465a9500-5b68-11eb-9d76-14bb2b031439.PNG)
