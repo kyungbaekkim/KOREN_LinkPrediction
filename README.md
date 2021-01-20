@@ -51,7 +51,7 @@ Beautifulsoup4라이브러리를 활용하여 KOREN망의 Link정보를 수집�
 
 ### 5.예측 결과(예시)
 대전-광주 Link의 10분 후 예측 결과는 다음 그림과 같다.
-[20210121_MDPhd_MEETING_Arresh.pptx](https://github.com/kyungbaekkim/KOREN_LinkPrediction/files/5842422/20210121_MDPhd_MEETING_Arresh.pptx)
+![캡처](https://user-images.githubusercontent.com/28920880/105176285-67bb8100-5b68-11eb-944b-15090be7be13.PNG)
 
 
 ### 6.시각화
