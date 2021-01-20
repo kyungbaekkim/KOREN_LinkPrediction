@@ -1,6 +1,6 @@
-# :books:Bi-LSTM기반 실시간 Link 예측 모델(KOREN_LinkPrediction)
+# :books:Bi-LSTM기반 실시간 Link 예측 모듈(KOREN_LinkPrediction)
 
-KOREN망의 각 Link별 현재 상태를 바탕으로 향후 10분, 30분, 60분 후의 Link 상태를 예측하는 Bi-LSTM기반 인공지능 모델
+KOREN망의 각 Link별 현재 상태를 바탕으로 향후 10분, 30분, 60분 후의 Link 상태를 예측하는 Bi-LSTM기반 인공지능 모듈
 
 
 ## :heavy_check_mark:Developer Environment
