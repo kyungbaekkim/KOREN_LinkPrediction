@@ -46,6 +46,7 @@ Beautifulsoup4라이브러리를 활용하여 KOREN망의 Link정보를 수집�
   - 출력 데이터: 다음 10분 후의 Link 상태
 
 다음 10분을 예측할 수 있는 인공지능 모델을 재귀적으로 사용하여 다음 그림과 같이 Multi-step Prediction 한다.
+![캡처](https://user-images.githubusercontent.com/28920880/105175807-c3d1d580-5b67-11eb-9f4b-ff276b35bc43.PNG)
 
 
 #### 5.시각화
