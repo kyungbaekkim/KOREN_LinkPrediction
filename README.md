@@ -22,7 +22,7 @@ Beautifulsoup4 라이브러리를 활용하여 다음 6개의 KOREN망 Link정�
   - accumulated_tx_bytes
   - accumulated_tx_packets
   
-KOREN망은 10개의 도시와 22개의 Link로 구성되며 다음과 같다.
+KOREN망은 10개의 노드와 22개의 Link로 구성되며 다음과 같다.
 ![캡처](https://user-images.githubusercontent.com/28920880/105176608-cc76db80-5b68-11eb-919d-ea62dd01c4c7.PNG)
 
 ### 2.데이터 전처리
