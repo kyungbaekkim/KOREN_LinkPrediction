@@ -15,12 +15,14 @@ KOREN망의 각 Link별 현재 상태를 바탕으로 향후 10분, 30분, 60분
 
 ## :book:Model Process
 ### 1.데이터 수집
-Beautifulsoup4라이브러리를 활용하여 KOREN망의 Link정보를 수집한다.
+Beautifulsoup4 라이브러리를 활용하여 다음 6개의 KOREN망 Link정보를 수집한다.
   - timestamp
   - current_tx_packetpersecond
   - current_tx_bitpersecond
   - accumulated_tx_bytes
   - accumulated_tx_packets
+  
+KOREN망은 22개 Link로 구성되며 다음과 같다.
 
 ### 2.데이터 전처리
 수집된 Link정보를 전처리한다.
