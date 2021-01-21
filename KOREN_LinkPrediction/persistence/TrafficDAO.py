@@ -1,8 +1,4 @@
-
-
 from pymongo import MongoClient
-
-
 
 class TrafficDAO:
     reply_list = []  # MongoDB Document를 담을 List
@@ -28,5 +24,5 @@ class TrafficDAO:
 
     # 2.2실제 네트워크 상태정보를 MongoDB에 저장
     def write_real(self, data):
-        print('>> MongoDB write data!')
         self.col_actual.insert(data)  # JSON Type = Dict Type(python)
+        print('>> MongoDB write data!')
