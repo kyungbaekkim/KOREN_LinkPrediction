@@ -20,34 +20,29 @@ def realtime_job(args):
     #####################################
     ## 3.Traffic Collection(Real-Time) ##
     #####################################
-    # 10ºĞ¿¡ ÇÑ¹ø¾¿ web(FileSystem)¿¡¼­ TrafficeÀ» ¼öÁı
-    try:
-        now = datetime.datetime.now()
-        print('[RUNNING]: Program Execute >> [TIME]: {}'.format(now))
+    # 10ë¶„ì— í•œë²ˆì”© web(FileSystem)ì—ì„œ Trafficeì„ ìˆ˜ì§‘
+    now = datetime.datetime.now()
+    print('[RUNNING]: Program Execute >> [TIME]: {}'.format(now))
 
-        collector = RealtimeTrafficCollector(args.LINK_PATH)
-        flag, new_cnt = collector.realtime_crawler()
-    except Exception as e:
-        print('[ERROR]: Collector does not work.')
-        exit()
+    collector = RealtimeTrafficCollector(args.LINK_PATH)
+    flag, new_cnt = collector.realtime_crawler()
 
     #####################################
     ## 4.Traffic Prediction(Real-Time) ##
     #####################################
-    # »õ·Î ¼öÁıµÈ TrafficeÀÌ ÀÖ´Ù¸é Prediction ÁøÇà(ÇöÀç½Ã°£À» ±âÁØÀ¸·Î 10ºĞ 30ºĞ 1½Ã°£ °¢°¢ ¿¹Ãø)
-    try:
-        if flag == 1:
-            print('[RUNNING]: Traffic Prediction >> [TIME]: {}'.format(now))
-            predictor = RealtimeRecursiveEvalModel(args.LINK_PATH, new_cnt, flag=0)
-            predictor.predictions_model()
-    except Exception as e:
-        print(e)
+    # ìƒˆë¡œ ìˆ˜ì§‘ëœ Trafficeì´ ìˆë‹¤ë©´ Prediction ì§„í–‰(í˜„ì¬ì‹œê°„ì„ ê¸°ì¤€ìœ¼ë¡œ 10ë¶„ 30ë¶„ 1ì‹œê°„ ê°ê° ì˜ˆì¸¡)
+
+    if flag == 1:
+        print('[RUNNING]: Traffic Prediction >> [TIME]: {}'.format(now))
+        predictor = RealtimeRecursiveEvalModel(args.LINK_PATH, new_cnt, flag=0)
+        predictor.predictions_model()
+
 
 def init_job(args):
     #################################
     ## 3.Traffic Collection(Batch) ##
     #################################
-    # 10ºĞ¿¡ ÇÑ¹ø¾¿ web(FileSystem)¿¡¼­ TrafficeÀ» ¼öÁı
+    # 10ë¶„ì— í•œë²ˆì”© web(FileSystem)ì—ì„œ Trafficeì„ ìˆ˜ì§‘
     now = datetime.datetime.now()
     print('[RUNNING]: Program Execute >> [TIME]: {}'.format(now))
 
@@ -60,45 +55,38 @@ def init_job(args):
     genAI = GenAI10Min(args.LINK_PATH)
     genAI.gen_ai_model()
 
-    #################################
-    ## 5.Traffic Prediction(Batch) ##
-    #################################
-    print('[RUNNING]: Traffic Prediction >> [TIME]: {}'.format(now))
-    predictor = RealtimeRecursiveEvalModel(args.LINK_PATH, new_cnt, flag=1)
-    predictor.predictions_model()
-
 
 def main():
     ##########################
     ## 1.Receiving Argument ##
     ##########################\
-    # ÅÍ¹Ì³Î·ÎºÎÅÍ ¿¹ÃøÇÏ°í½ÍÀº ¸µÅ©ÀÎÅÍÆäÀÌ½º¿Í ½ÇÇà¿É¼ÇÀ» Àü´Ş¹ŞÀ½
-    # ¸µÅ© ÀÎÅÍÆäÀÌ½º ¿¹½Ã ==> P2-Daejeon-prs1e11-Daejeon-Gwangju
-    # ¿É¼Ç ¿¹½Ã ==> 0:½Ç½Ã°£ µ¿ÀÛ 1: ÃÊ±âÈ­(ÀÏ°ıÃ³¸®) µ¿ÀÛ
+    # í„°ë¯¸ë„ë¡œë¶€í„° ì˜ˆì¸¡í•˜ê³ ì‹¶ì€ ë§í¬ì¸í„°í˜ì´ìŠ¤ì™€ ì‹¤í–‰ì˜µì…˜ì„ ì „ë‹¬ë°›ìŒ
+    # ë§í¬ ì¸í„°í˜ì´ìŠ¤ ì˜ˆì‹œ ==> P2-Daejeon-prs1e11-Daejeon-Gwangju
+    # ì˜µì…˜ ì˜ˆì‹œ ==> 0:ì‹¤ì‹œê°„ ë™ì‘ 1: ì´ˆê¸°í™”(ì¼ê´„ì²˜ë¦¬) ë™ì‘
     p = argparse.ArgumentParser()
 
-    # python MainApp.py -link P2-Daejeon-prs1e11-Daejeon-Gwangju -init 1 ==> ÃÊ±âÈ­ ÁøÇà(°ú°ÅºÎÅÍ ÇöÀç±îÁö °á°ú ÀúÀå)
-    # python MainApp.py -link P2-Daejeon-prs1e11-Daejeon-Gwangju -init 0 ==> ½Ç½Ã°£ ½ÇÇà(ÇöÀç½Ã°£ºÎÅÍ 10ºĞ´ÜÀ§ ½Ç½Ã°£ ÀúÀå)
-    p.add_argument("-link", "--LINK_PATH", default="P2-Daejeon-prs1e11-Daejeon-Gwangju") # ¼öÁı ¹× ¿¹Ãø ÇÒ Link¸¦ ¹Ş´Â´Ù ex) ´ëÀü-±¤ÁÖ
-    p.add_argument("-init", "--INIT_PATH", default="0")  # ¼öÁı ¹× ¿¹Ãø ÇÒ Link¸¦ ¹Ş´Â´Ù ex) ´ëÀü-±¤ÁÖ
+    # python MainApp.py -link P2-Daejeon-prs1e11-Daejeon-Gwangju -init 1 ==> ì´ˆê¸°í™” ì§„í–‰(ê³¼ê±°ë¶€í„° í˜„ì¬ê¹Œì§€ ê²°ê³¼ ì €ì¥)
+    # python MainApp.py -link P2-Daejeon-prs1e11-Daejeon-Gwangju -init 0 ==> ì‹¤ì‹œê°„ ì‹¤í–‰(í˜„ì¬ì‹œê°„ë¶€í„° 10ë¶„ë‹¨ìœ„ ì‹¤ì‹œê°„ ì €ì¥)
+    p.add_argument("-link", "--LINK_PATH", default="P2-Daejeon-prs1e11-Daejeon-Gwangju") # ìˆ˜ì§‘ ë° ì˜ˆì¸¡ í•  Linkë¥¼ ë°›ëŠ”ë‹¤ ex) ëŒ€ì „-ê´‘ì£¼
+    p.add_argument("-init", "--INIT_PATH", default="0")  # ìˆ˜ì§‘ ë° ì˜ˆì¸¡ í•  Linkë¥¼ ë°›ëŠ”ë‹¤ ex) ëŒ€ì „-ê´‘ì£¼
     args = p.parse_args()
 
     ##########################
     ## 2.Scheduling Program ##
     ##########################
-    # 10ºĞ¿¡ ÇÑ¹ø¾¿ FileSystem¿¡¼­ Traffic ¼öÁı
+    # 10ë¶„ì— í•œë²ˆì”© FileSystemì—ì„œ Traffic ìˆ˜ì§‘
     if args.INIT_PATH == '1': # Batch Process
-        # °ú°ÅºÎÅÍ ÇöÀç±îÁö ÇØ´ç ¸µÅ©ÀÎÅÍÆäÀÌ½ºÀÇ ³×Æ®¿öÅ©»óÅÂÁ¤º¸¸¦ ¼öÁıÇÏ°í MongoDB¿¡ ÀúÀå
-        # AI¸ğµ¨À» ÅëÇØ ´ÙÀ½ 10ºĞ, 30ºĞ, 60ºĞÈÄÀÇ ³×Æ®¿öÅ©»óÅÂÁ¤º¸¸¦ ¿¹ÃøÇÏ°í ElasticSearch¿¡ ÀúÀå
+        # ê³¼ê±°ë¶€í„° í˜„ì¬ê¹Œì§€ í•´ë‹¹ ë§í¬ì¸í„°í˜ì´ìŠ¤ì˜ ë„¤íŠ¸ì›Œí¬ìƒíƒœì •ë³´ë¥¼ ìˆ˜ì§‘í•˜ê³  MongoDBì— ì €ì¥
+        # AIëª¨ë¸ì„ í†µí•´ ë‹¤ìŒ 10ë¶„, 30ë¶„, 60ë¶„í›„ì˜ ë„¤íŠ¸ì›Œí¬ìƒíƒœì •ë³´ë¥¼ ì˜ˆì¸¡í•˜ê³  ElasticSearchì— ì €ì¥
         print('[RUNNING] INIT Program Start')
         init_job(args)
     else: # Real-Time Process
-        # ÇØ´ç ¸µÅ©ÀÎÅÍÆäÀÌ½º¿¡¼­ 10ºĞ´ÜÀ§·Î »ı¼ºµÇ´Â ³×Æ®¿öÅ© »óÅÂÁ¤º¸¸¦ ½Ç½Ã°£À¸·Î ¼öÁıÇÏ¿© MongoDB¿¡ ÀúÀå
-        # AI¸ğµ¨À» ÅëÇØ ´ÙÀ½ 10ºĞ, 30ºĞ, 60ºĞÈÄÀÇ ³×Æ®¿öÅ©»óÅÂÁ¤º¸¸¦ ¿¹ÃøÇÏ°í ElasticSearch¿¡ ÀúÀå
+        # í•´ë‹¹ ë§í¬ì¸í„°í˜ì´ìŠ¤ì—ì„œ 10ë¶„ë‹¨ìœ„ë¡œ ìƒì„±ë˜ëŠ” ë„¤íŠ¸ì›Œí¬ ìƒíƒœì •ë³´ë¥¼ ì‹¤ì‹œê°„ìœ¼ë¡œ ìˆ˜ì§‘í•˜ì—¬ MongoDBì— ì €ì¥
+        # AIëª¨ë¸ì„ í†µí•´ ë‹¤ìŒ 10ë¶„, 30ë¶„, 60ë¶„í›„ì˜ ë„¤íŠ¸ì›Œí¬ìƒíƒœì •ë³´ë¥¼ ì˜ˆì¸¡í•˜ê³  ElasticSearchì— ì €ì¥
         print('[RUNNING] Real-Time Program Start')
         sched = BackgroundScheduler()
         sched.start()
-        sched.add_job(realtime_job, 'cron', minute='*/20', kwargs={'args': args})
+        sched.add_job(realtime_job, 'cron', minute='*/10', kwargs={'args': args})
 
         now = datetime.datetime.now()
         while True:
