@@ -3,6 +3,7 @@
 ## ==> 10분, 30분, 60분 후를 예측  ##
 #####################################
 
+import pprint
 from keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_squared_error
@@ -36,16 +37,16 @@ class RealtimeRecursiveEvalModel:
         # Elastic Search 설정
         self.index_link = link.lower()
         # curl -XGET http://localhost:9200/tbl_P2-Daejeon-prs1e11-Daejeon-Gwangju?pretty
-        print('==================================================')
-        print('http://localhost:9200/tbl_{}?pretty'.format(self.index_link))
-        print('==================================================')
-        try:
-            index_url = 'http://localhost:9200/tbl_{}?pretty'.format(self.index_link)
-            res = requests.put(index_url)  ####################################
-            print("Create Table", link)
-        except Exception as e:
-            print(e)
-            print("Exist Table", link)
+        # print('==================================================')
+        # print('http://localhost:9200/tbl_{}?pretty'.format(self.index_link))
+        # print('==================================================')
+        # try:
+        #     index_url = 'http://localhost:9200/tbl_{}?pretty'.format(self.index_link)
+        #     res = requests.put(index_url)  ####################################
+        #     # print("Create Table", link)
+        # except Exception as e:
+        #     print(e)
+        #     print("Exist Table", link)
 
         # MongoDB 설정
         self.tDao = TDAO.TrafficDAO()
@@ -57,12 +58,11 @@ class RealtimeRecursiveEvalModel:
         scaler = MinMaxScaler()
         df_data_normal = self.df_data.copy()
         df_data_normal = df_data_normal.drop(['date', 'link_availability'], axis=1)
-        # print(df_data_normal)
+
         df_data_normal[:] = scaler.fit_transform(df_data_normal[:])
         # df_data_normal.drop(['tx_link_utilization'], axis=1, inplace=True)
         # print(df_data_normal)
         df_np_data = df_data_normal.to_numpy()
-        print('[df_np_data] → {}'.format(df_np_data.shape))
         return df_np_data
 
     ###################################
@@ -82,15 +82,7 @@ class RealtimeRecursiveEvalModel:
     ## : 10분, 20분, 30분, 40분, 50분, 60분 Traffic 예측 작업 ##
     ############################################################
     def predictions_model(self):
-        # print(df_np_data)
-        print(type(self.df_np_data))
-        print(self.df_np_data.shape)
-
         X_test = self.generateX(self.df_np_data, 30)
-        print('[Data Shape] => {}'.format(X_test.shape))
-        # print(len(X_test))
-        # print('[Test Data] → {}'.format(X_test.shape))
-        # print('[업데이트 된 Traffic 수] → ', self.new_cnt)
         self.eval_10min_60min(X_test)
 
     ###############################################
@@ -106,7 +98,6 @@ class RealtimeRecursiveEvalModel:
         np_eval_60min = np.zeros((self.new_cnt, 5))
 
         for i in range(len(X_test)): # 1374번 반복 수행
-            print('{}번째 작업중'.format(i))
             # X_test[i] → result_10min[i]의 학습 결과 1~30개(10분단위) = 300분
             new_data = X_test[i] # 1~30
             for j in range(6): #
@@ -143,42 +134,42 @@ class RealtimeRecursiveEvalModel:
             # print(list(df_actual['date'])[0])
 
             # 6.1 Predictions 결과 ==> ElasticSearch 저장
-            elk_data = {
-                'log_time': list(df_actual['date'])[0],
-                'time_index_A': X_test[i][len(X_test[0]) - 1][0],
-                'tx_packetpersecond_A': X_test[i][len(X_test[0]) - 1][1],
-                'tx_bitpersecond_A': X_test[i][len(X_test[0]) - 1][2],
-                'tx_bytes_A': X_test[i][len(X_test[0]) - 1][3],
-                'tx_packets_A': X_test[i][len(X_test[0]) - 1][4],
-                'link_usage_A': 1 - (X_test[i][len(X_test[0]) - 1][2] / 100000000),
-                'time_index_10min': np_eval_10min[i][0],
-                'tx_packetpersecond_10min': np_eval_10min[i][1],
-                'tx_bitpersecond_10min': np_eval_10min[i][2],
-                'tx_bytes_10min': np_eval_10min[i][3],
-                'tx_packets_10min': np_eval_10min[i][4],
-                'link_usage_10min': 1 - (np_eval_10min[i][2] / 100000000),
-                'time_index_30min': np_eval_30min[i][0],
-                'tx_packetpersecond_30min': np_eval_30min[i][1],
-                'tx_bitpersecond_30min': np_eval_30min[i][2],
-                'tx_bytes_30min': np_eval_30min[i][3],
-                'tx_packets_30min': np_eval_30min[i][4],
-                'link_usage_30min': 1 - (np_eval_30min[i][2] / 100000000),
-                'time_index_60min': np_eval_60min[i][0],
-                'tx_packetpersecond_60min': np_eval_60min[i][1],
-                'tx_bitpersecond_60min': np_eval_60min[i][2],
-                'tx_bytes_60min': np_eval_60min[i][3],
-                'tx_packets_60min': np_eval_60min[i][4],
-                'link_usage_60min': 1 - (np_eval_60min[i][2] / 100000000)
-            }
-            print('###############################################')
-            print(elk_data)
-            print('###############################################')
-            headers = {'Content-Type': 'application/json; charset=utf-8'}
-            put_url = 'http://localhost:9200/tbl_{index_link}/_doc?pretty'.format(index_link=self.index_link)
-            res = requests.post(put_url, headers=headers, data=json.dumps(elk_data))
-            print('###############################################')
-            print(self.index_link, res.status_code)
-            print('###############################################')
+            # elk_data = {
+            #     'log_time': list(df_actual['date'])[0],
+            #     'time_index_A': X_test[i][len(X_test[0]) - 1][0],
+            #     'tx_packetpersecond_A': X_test[i][len(X_test[0]) - 1][1],
+            #     'tx_bitpersecond_A': X_test[i][len(X_test[0]) - 1][2],
+            #     'tx_bytes_A': X_test[i][len(X_test[0]) - 1][3],
+            #     'tx_packets_A': X_test[i][len(X_test[0]) - 1][4],
+            #     'link_usage_A': 1 - (X_test[i][len(X_test[0]) - 1][2] / 100000000),
+            #     'time_index_10min': np_eval_10min[i][0],
+            #     'tx_packetpersecond_10min': np_eval_10min[i][1],
+            #     'tx_bitpersecond_10min': np_eval_10min[i][2],
+            #     'tx_bytes_10min': np_eval_10min[i][3],
+            #     'tx_packets_10min': np_eval_10min[i][4],
+            #     'link_usage_10min': 1 - (np_eval_10min[i][2] / 100000000),
+            #     'time_index_30min': np_eval_30min[i][0],
+            #     'tx_packetpersecond_30min': np_eval_30min[i][1],
+            #     'tx_bitpersecond_30min': np_eval_30min[i][2],
+            #     'tx_bytes_30min': np_eval_30min[i][3],
+            #     'tx_packets_30min': np_eval_30min[i][4],
+            #     'link_usage_30min': 1 - (np_eval_30min[i][2] / 100000000),
+            #     'time_index_60min': np_eval_60min[i][0],
+            #     'tx_packetpersecond_60min': np_eval_60min[i][1],
+            #     'tx_bitpersecond_60min': np_eval_60min[i][2],
+            #     'tx_bytes_60min': np_eval_60min[i][3],
+            #     'tx_packets_60min': np_eval_60min[i][4],
+            #     'link_usage_60min': 1 - (np_eval_60min[i][2] / 100000000)
+            # }
+            # print('###############################################')
+            # print(elk_data)
+            # print('###############################################')
+            # headers = {'Content-Type': 'application/json; charset=utf-8'}
+            # put_url = 'http://localhost:9200/tbl_{index_link}/_doc?pretty'.format(index_link=self.index_link)
+            # res = requests.post(put_url, headers=headers, data=json.dumps(elk_data))
+            # print('###############################################')
+            # print(self.index_link, res.status_code)
+            # print('###############################################')
 
             # 6.2 Predictions 결과 ==> MongoDB 저장
             mongo_data = {'_id' : new_date_list[i],
@@ -208,7 +199,4 @@ class RealtimeRecursiveEvalModel:
                     'link_usage_60min': 1 - (np_eval_60min[i][2] / 100000000)
                     }
             self.tDao.write_predict(mongo_data)
-
-
-evalmodel = RealtimeRecursiveEvalModel('P2-Daejeon-prs1e11-Daejeon-Gwangju', 50, 1)
-evalmodel.predictions_model()
+            pprint.pprint(mongo_data)
