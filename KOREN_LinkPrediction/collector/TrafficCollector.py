@@ -5,6 +5,7 @@
 ## 현재시간까지 누적 된 네트워크 상태정보를 수집하고 MongoDB에 저장 ##
 ######################################################################
 
+import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -124,6 +125,9 @@ class TrafficCollector:
         # 3.2 수집 된 데이터 → Excel 저장(임시)
         now = datetime.now()
         formattedDate = now.strftime("%Y%m%d")
+        output_path = './output/dataset'
+        if not os.path.isdir(output_path):
+            os.makedirs(output_path)
         df_data.to_excel('./output/dataset/{}_real_traffic.xlsx'.format(self.link), index=False)
 
         # 3.3 수집 된 데이터 → MongoDB 저장
