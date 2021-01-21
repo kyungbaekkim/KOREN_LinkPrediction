@@ -11,9 +11,7 @@ import pandas as pd
 import pprint
 from datetime import datetime
 import persistence.TrafficDAO as TDAO
-
 pd.options.display.float_format = '{:}'.format  # 지수없이 수치값 표현
-
 
 class RealtimeTrafficCollector:
 
@@ -112,10 +110,6 @@ class RealtimeTrafficCollector:
 
             new_traffic_list.append(pre_csv)
 
-            # 3.1 수집 된 데이터 → MongoDB 저장
-            for i in new_traffic_list:
-                self.tDao.write_real(i)
-
         return new_traffic_list
 
     def realtime_crawler(self):
@@ -151,22 +145,21 @@ class RealtimeTrafficCollector:
             # 해당 Link의 새롭게 추가된 Traffic 데이터 수집 => new_traffic_list => 구조: [{}, {}, {}, {}, {}, {}]
             new_traffic_list = self.traffic_collector(csv_list, self.new_cnt)
 
-
-
             # 새롭게 수집된 Traffic을 데이터프레임에 추가(기존 Traffic + 수집된 Traffic)
             for new_traffic in new_traffic_list:
-                # print(new_traffic)
                 self.df_real = self.df_real.append(new_traffic, ignore_index=True)
+
+            # 3.1 수집 된 데이터 → MongoDB 저장
+            for i in new_traffic_list:
+                self.tDao.write_real(i)
 
             #############################################
             ## 3.수집 된 데이터(과거부터 현재까지) 저장##
             #############################################
             # 3.2 수집 된 데이터 → Excel 저장(임시)
             # Traffic 엑셀 데이터 동기화 => 데이터프레임(기존 Traffic + 수집된 Traffic)을 업로드
+
             self.df_real.to_excel('./output/dataset/{}_real_traffic.xlsx'.format(self.link), index=False)
             return 1, self.new_cnt
         else:
             return 0, self.new_cnt
-
-# collector = RealtimeTrafficCollector('P2-Daejeon-prs1e11-Daejeon-Gwangju')
-# collector.realtime_crawler()
