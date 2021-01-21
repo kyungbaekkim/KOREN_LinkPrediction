@@ -24,7 +24,7 @@ class GenAI10Min:
         #################
         # link = 'P4-Gwangju-prs1e1-Gwangju-Daejeon'
         self.link = link # 'P5-Daegu-prs2e1-Busan-Daejeon'
-        dir_data = '../output/dataset/{}_real_traffic.xlsx'.format(self.link)
+        dir_data = './output/dataset/{}_real_traffic.xlsx'.format(self.link)
         self.df_data = pd.read_excel(dir_data)
         self.df_data = self.df_data.drop(['date', 'link_availability'], axis=1)
         self.df_np_data = self.normalization()
@@ -105,4 +105,7 @@ class GenAI10Min:
                   validation_split=0.05)
         model.summary()
 
+        output_path = './output/model'
+        if not os.path.isdir(output_path):
+            os.makedirs(output_path)
         model.save('./output/model/Bi-LSTM_N30_L3_V5_model_{}.h5'.format(self.link))
