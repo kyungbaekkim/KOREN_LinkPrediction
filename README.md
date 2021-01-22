@@ -12,6 +12,17 @@ KOREN망의 각 Link별 현재 상태를 바탕으로 향후 10분, 30분, 60분
   - Collector: Beautifulsoup4
   - Storage: MongoDB, ElasticSearch
   - Visualization: Kibana
+  
+## :heavy_check_mark:Requirement
+프로그램 실행 전 반드시 MongoDB를 설치해야 한다. [Mongodb 다운로드](https://www.mongodb.com/try)  
+MongoDB를 설치하고 mongod 서버를 실행하기만 하면 된다. 기본적인 환경은 Default(Port: 27017)를 사용한다.
+
+다음은 Linux(Ubuntu)환경에서 MongoDB를 설치하고 실행하는 방법이다.
+```
+$ sudo apt-get intsll -y mongodb-org
+$ sudo service mongod start
+$ ps -ef | grep mongodb
+```
 
 ## :book:Model Process
 ### 1.데이터 수집
